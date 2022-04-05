@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
 
+    private val navigator = AppNavigator(this, R.id.fragment_container)
+
     @Inject
     lateinit var router: Router
-
-    private val navigator = AppNavigator(this, R.id.fragment_container)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
