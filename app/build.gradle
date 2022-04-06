@@ -68,10 +68,17 @@ dependencies {
     //Google maps
     //TODO: add google maps dependencies
 
-    //Glide
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    //Coil
+    implementation("io.coil-kt:coil:2.0.0-rc02")
 
     //RV
     implementation("androidx.recyclerview:recyclerview:1.2.1")
+    implementation 'tk.zielony:carbon:0.16.0.1' //need to set elevation color for rv item
+
+
+    //Pagination
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation "androidx.paging:paging-rxjava3:3.1.1"
+
 
 }

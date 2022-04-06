@@ -1,20 +1,36 @@
 package com.example.space.ui.main_screen
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingData
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.api_response_model.Photo
 import com.example.space.R
 import com.example.space.databinding.FragmentMainScreenBinding
-import com.example.space.databinding.FragmentSplashScreenBinding
+import com.example.space.mvi_interfaces.main_screen.MainScreenView
+import com.example.space.presenters.MainScreenPresenter
+import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
+import javax.inject.Provider
 
-
-class MainScreenFragment : MvpAppCompatFragment(R.layout.fragment_main_screen) {
+@AndroidEntryPoint
+class MainScreenFragment : MvpAppCompatFragment(R.layout.fragment_main_screen), MainScreenView {
 
     private var _binding: FragmentMainScreenBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var compositeDisposable: CompositeDisposable
+
+    @Inject
+    lateinit var presenterProvider: Provider<MainScreenPresenter>
+    private val presenter by moxyPresenter { presenterProvider.get() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,11 +42,29 @@ class MainScreenFragment : MvpAppCompatFragment(R.layout.fragment_main_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = MainScreenAdapter() {
+            itemClickListener(it)
+        }
+        val gridLayoutManager = GridLayoutManager(requireContext(), 2)
+        binding.rvPhotos.adapter = adapter
+        binding.rvPhotos.layoutManager = gridLayoutManager
+        presenter.showUi(adapter)
 
+    }
+
+    private fun itemClickListener(photo: Photo) {
+        //TODO: navigate to details screen
+    }
+
+    override fun showRecycleView(photos: Flowable<PagingData<Photo>>, adapter: MainScreenAdapter) {
+        compositeDisposable.add(photos.subscribe{
+            adapter.submitData(lifecycle, it)
+        })
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        compositeDisposable.dispose()
         _binding = null
     }
 }

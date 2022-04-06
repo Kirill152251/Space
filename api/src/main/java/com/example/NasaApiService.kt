@@ -10,6 +10,6 @@ import retrofit2.http.Query
 interface NasaApiService {
     @GET("photos")
     fun getPhotos(
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): Single<NasaApiResponse>
 }
