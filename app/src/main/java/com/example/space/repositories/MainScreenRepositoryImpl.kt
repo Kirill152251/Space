@@ -11,9 +11,10 @@ import com.example.space.utils.NETWORK_PAGE_SIZE
 import dagger.hilt.android.scopes.FragmentScoped
 import io.reactivex.rxjava3.core.Flowable
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-@FragmentScoped
+@Singleton
 class MainScreenRepositoryImpl @Inject constructor(private val pagingSource: PhotoPagingSource) :
     MainScreenRepository {
     override fun getPhotos(): Flowable<PagingData<Photo>> {
