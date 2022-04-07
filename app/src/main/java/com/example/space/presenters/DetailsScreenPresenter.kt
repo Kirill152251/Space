@@ -13,4 +13,8 @@ class DetailsScreenPresenter @Inject constructor() : MvpPresenter<DetailsScreenV
     fun showUi(url: String) {
         viewState.showPhoto(url)
     }
+
+    fun showOnboardingScreen(){
+        viewState.showOnboardingScreen()
+    }
 }

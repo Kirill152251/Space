@@ -45,9 +45,7 @@ class SplashScreenFragment : MvpAppCompatFragment(R.layout.fragment_splash_scree
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         presenter.showAnimation()
-
     }
 
     override fun showAnimation() {

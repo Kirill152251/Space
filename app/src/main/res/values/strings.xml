@@ -5,4 +5,7 @@
     <string name="example_rover_name">Curiosity</string>
     <string name="example_camera_name">Front Hazard Avoidance Camera</string>
     <string name="show_image">SHOW IMAGE</string>
+    <string name="onboarding_back">Click to go back</string>
+    <string name="onboarding_share">Click to share</string>
+    <string name="onboarding_usage">Use gestures to zoom in/out</string>
 </resources>
