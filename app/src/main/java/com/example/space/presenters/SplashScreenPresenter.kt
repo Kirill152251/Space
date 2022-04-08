@@ -5,6 +5,8 @@ import com.example.space.mvi_interfaces.splash_screen.SplashScreenView
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import javax.inject.Inject
+import javax.inject.Singleton
+
 
 class SplashScreenPresenter @Inject constructor(private val router: Router) :
     MvpPresenter<SplashScreenView>() {

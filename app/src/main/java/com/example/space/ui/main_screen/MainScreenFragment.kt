@@ -53,7 +53,7 @@ class MainScreenFragment : MvpAppCompatFragment(R.layout.fragment_main_screen), 
     }
 
     private fun itemClickListener(photo: Photo) {
-        //TODO: navigate to details screen
+        presenter.openDetailsScreen(photo.image)
     }
 
     override fun showRecycleView(photos: Flowable<PagingData<Photo>>, adapter: MainScreenAdapter) {

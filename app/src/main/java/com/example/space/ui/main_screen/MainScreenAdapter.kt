@@ -19,7 +19,7 @@ class MainScreenAdapter(private val clickListener: (photoItem: Photo) -> Unit): 
     override fun onBindViewHolder(holder: PhotosViewHolder, position: Int) {
         val photo = getItem(position)
         holder.bind(photo!!)
-        holder.binding.textShowImage.setOnClickListener { clickListener(photo) }
+        holder.itemView.setOnClickListener { clickListener(photo) }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotosViewHolder {
@@ -35,7 +35,7 @@ class MainScreenAdapter(private val clickListener: (photoItem: Photo) -> Unit): 
                 textRoverName.text = photo.rover.name
                 imagePhoto.load(photo.image.parseImageUrl()) {
                     crossfade(true)
-                    crossfade(600)
+                    crossfade(300)
                 }
             }
         }
