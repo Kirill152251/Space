@@ -7,11 +7,10 @@
     android:background="@color/main_screen_background"
     tools:context=".ui.details_screen.DetailsScreenFragment">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <com.example.space.ui.PhotoCustomView
         android:id="@+id/image_detail_photo"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
