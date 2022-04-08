@@ -8,4 +8,6 @@
     <string name="onboarding_back">Click to go back</string>
     <string name="onboarding_share">Click to share</string>
     <string name="onboarding_usage">Use gestures to zoom in/out</string>
+    <string name="share_photo_error">Failed to share photo</string>
+    <string name="share">Share Vie:</string>
 </resources>
