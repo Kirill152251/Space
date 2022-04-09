@@ -42,6 +42,9 @@ class MainScreenFragment : MvpAppCompatFragment(R.layout.fragment_main_screen), 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val bottomMenu =
+            requireActivity().findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.layout_bottom_menu)
+        bottomMenu.visibility = View.VISIBLE
         val adapter = MainScreenAdapter() {
             itemClickListener(it)
         }

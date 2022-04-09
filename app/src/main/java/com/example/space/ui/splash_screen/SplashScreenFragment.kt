@@ -45,6 +45,9 @@ class SplashScreenFragment : MvpAppCompatFragment(R.layout.fragment_splash_scree
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val bottomMenu =
+            requireActivity().findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.layout_bottom_menu)
+        bottomMenu.visibility = View.GONE
         presenter.showAnimation()
     }
 

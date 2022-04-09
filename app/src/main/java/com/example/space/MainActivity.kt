@@ -5,7 +5,7 @@ import com.example.space.databinding.ActivityMainBinding
 import com.example.space.mvi_interfaces.MainActivityView
 import com.example.space.presenters.MainActivityPresenter
 import com.example.space.ui.main_screen.MainScreenFragment
-import com.example.space.ui.splash_screen.SplashScreenFragment
+import com.example.space.ui.map_screen.MapScreenFragment
 
 import com.github.terrakok.cicerone.NavigatorHolder
 import com.github.terrakok.cicerone.androidx.AppNavigator
@@ -38,6 +38,31 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         if (savedInstanceState == null) {
             presenter.openSplashScreen()
         }
+        setupBottomMenu()
+    }
+
+    private fun setupBottomMenu() {
+        binding.itemMainScreen.setOnClickListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is MainScreenFragment) {
+                binding.apply {
+                    itemMainScreen.setImageResource(R.drawable.main_bottom_menu_check)
+                    itemMapsScreen.setImageResource(R.drawable.maps_bottom_menu_uncheck)
+                }
+                presenter.navigateToMainScreen()
+            }
+        }
+        binding.itemMapsScreen.setOnClickListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            if (currentFragment !is MapScreenFragment) {
+                binding.apply {
+                    itemMainScreen.setImageResource(R.drawable.main_bottom_menu_uncheck)
+                    itemMapsScreen.setImageResource(R.drawable.maps_bottom_menu_check)
+                }
+                presenter.navigateToMapScreen()
+            }
+        }
+
     }
 
     override fun onBackPressed() {
