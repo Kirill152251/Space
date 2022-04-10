@@ -1,4 +1,4 @@
-package com.example.space.mvi_interfaces.main_screen
+package com.example.space.mvi_interfaces
 
 import android.provider.ContactsContract
 import androidx.paging.LoadStateAdapter

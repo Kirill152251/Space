@@ -6,15 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".ui.map_screen.MapScreenFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Map"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/image_change_mod"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/earth"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/map_type"
+        android:textColor="@color/light_gray"
+        app:layout_constraintEnd_toEndOf="@+id/image_change_mod"
+        app:layout_constraintStart_toStartOf="@+id/image_change_mod"
+        app:layout_constraintTop_toBottomOf="@+id/image_change_mod" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

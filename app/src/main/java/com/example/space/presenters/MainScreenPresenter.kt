@@ -3,14 +3,13 @@ package com.example.space.presenters
 import androidx.paging.PagingData
 import com.example.api_response_model.Photo
 import com.example.space.Screens.DetailsScreen
-import com.example.space.mvi_interfaces.main_screen.MainScreenView
+import com.example.space.mvi_interfaces.MainScreenView
 import com.example.space.repositories.interfaces.MainScreenRepository
 import com.example.space.ui.main_screen.MainScreenAdapter
 import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Flowable
 import moxy.MvpPresenter
 import javax.inject.Inject
-import javax.inject.Singleton
 
 
 class MainScreenPresenter @Inject constructor(

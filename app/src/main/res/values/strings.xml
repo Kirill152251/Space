@@ -10,4 +10,11 @@
     <string name="onboarding_usage">Use gestures to zoom in/out</string>
     <string name="share_photo_error">Failed to share photo</string>
     <string name="share">Share Vie:</string>
+    <string name="map_type">TYPE</string>
+    <string name="map_type_dialog_title">Choose map type:</string>
+    <string name="mode_normal">Normal</string>
+    <string name="mode_satellite">Satellite</string>
+    <string name="mode_hybrid">Hybrid</string>
+    <string name="positive_button">OK</string>
+    <string name="negative_button">Cancel</string>
 </resources>
