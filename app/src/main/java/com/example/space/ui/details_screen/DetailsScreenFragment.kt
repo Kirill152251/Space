@@ -66,7 +66,6 @@ class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_s
     private fun sharePhoto() {
         val bitmapDrawable = binding.imageDetailPhoto.drawable as BitmapDrawable
         val bitmap = bitmapDrawable.bitmap
-        //val bitmap = Bitmap.createBitmap(binding.imageDetailPhoto.width, binding.imageDetailPhoto.height, Bitmap.Config.ARGB_8888)
         val imageFolder = File(requireActivity().cacheDir, "image")
         val imageUri: Uri = try {
             imageFolder.mkdirs()

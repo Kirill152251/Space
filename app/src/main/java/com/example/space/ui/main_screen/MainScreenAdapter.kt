@@ -14,7 +14,8 @@ import com.example.space.databinding.PhotoItemBinding
 import com.example.space.ui.main_screen.MainScreenAdapter.PhotosViewHolder
 import com.example.space.utils.parseImageUrl
 
-class MainScreenAdapter(private val clickListener: (photoItem: Photo) -> Unit): PagingDataAdapter<Photo, PhotosViewHolder>(PHOTO_COMPARATOR) {
+class MainScreenAdapter(private val clickListener: (photoItem: Photo) -> Unit) :
+    PagingDataAdapter<Photo, PhotosViewHolder>(PHOTO_COMPARATOR) {
 
     override fun onBindViewHolder(holder: PhotosViewHolder, position: Int) {
         val photo = getItem(position)

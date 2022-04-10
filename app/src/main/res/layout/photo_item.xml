@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:background="@color/app_dark"
+    android:background="?attr/colorPrimary"
     android:layout_marginHorizontal="8dp"
     app:carbon_cornerRadius="16dp"
     app:carbon_elevation="6dp"
-    app:carbon_elevationShadowColor="#FDC700">
+    app:carbon_elevationShadowColor="?attr/colorControlActivated">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -53,8 +53,5 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="8dp"
             android:text="@string/show_image" />
-
     </RelativeLayout>
-
-
 </carbon.widget.LinearLayout>
