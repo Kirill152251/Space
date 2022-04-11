@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id'com.google.gms.google-services'
 }
 
 android {
@@ -63,7 +64,8 @@ dependencies {
     kapt "com.google.dagger:hilt-compiler:2.40"
 
     //Firebase
-    //TODO: add firebase dependencies
+    implementation platform('com.google.firebase:firebase-bom:29.2.1')
+    implementation('com.google.firebase:firebase-messaging-ktx')
 
     //Google maps
     //TODO: add google maps dependencies
