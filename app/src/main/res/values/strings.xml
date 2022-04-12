@@ -10,4 +10,9 @@
     <string name="onboarding_usage">Use gestures to zoom in/out</string>
     <string name="share_photo_error">Failed to share photo</string>
     <string name="share">Share Vie:</string>
+    <string name="charge_notification_body">It’s time to explore our Earth!</string>
+    <string name="notification_action">Explore</string>
+    <string name="notification_info">…to send notification</string>
+    <string name="notification_info_title">App is running in background…</string>
+    <string name="notification_info_title2">App is running in background to send notification when device starts charging. You can disable this feature in Settings.</string>
 </resources>
