@@ -8,19 +8,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.HtmlCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
 import com.example.space.databinding.FragmentMapScreenBinding
 import com.example.space.mvi_interfaces.MapScreenView
 import com.example.space.presenters.MapScreenPresenter
 import com.example.space.utils.MAP_TYPE
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
@@ -43,6 +49,10 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     @Inject
     lateinit var sharePref: SharedPreferences
 
+    private lateinit var adapter: MarkersAdapter
+
+    private val markers = mutableListOf<MapMarker>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +67,57 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         super.onViewCreated(view, savedInstanceState)
         binding.imageChangeMod.setOnClickListener {
             presenter.showMapTypeDialog(sharePref.getInt(MAP_TYPE, 0))
+        }
+
+        val bottomSheetLayout =
+            getView()?.findViewById<LinearLayout>(R.id.bottom_sheet_layout) as View
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        binding.imageMarkerManager.setOnClickListener {
+            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            } else {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            }
+        }
+
+        val markersRecyclerView = getView()?.findViewById<RecyclerView>(R.id.rv_markers)
+        adapter = MarkersAdapter() {
+            deleteMarker(it)
+        }
+        markersRecyclerView?.adapter = adapter
+        markersRecyclerView?.layoutManager = LinearLayoutManager(requireContext())
+
+    }
+
+    private fun deleteMarker(mapMarker: MapMarker) {
+    }
+
+    private fun setMarkerOnTheMap(latLng: LatLng) {
+        val dialogBuilder = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+        val dialogLayout = layoutInflater.inflate(R.layout.edit_text_layout, null)
+        val editText = dialogLayout.findViewById<TextInputEditText>(R.id.edit_text_marker_name)
+
+        with(dialogBuilder) {
+            setPositiveButton(getString(R.string.save_positive_button)) { _, _ ->
+                val markerName = editText.text.toString()
+                if (markerName.isEmpty()) {
+                    Snackbar.make(requireView(), getString(R.string.input_error), LENGTH_LONG).show()
+                    setMarkerOnTheMap(latLng)
+                } else {
+                    val marker1 = map?.addMarker(
+                        MarkerOptions().position(latLng)
+                            .icon(getBitmapFromDrawable())
+                    )
+                    val marker = MapMarker(markerName, latLng)
+                    markers.add(marker)
+                    adapter.submitList(markers)
+                }
+            }
+            setNegativeButton(getString(R.string.negative_button)) { _, _ -> }
+            setView(dialogLayout)
+            show()
         }
     }
 
@@ -73,17 +134,14 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                 R.raw.style_map
             )
         )
-        when(sharePref.getInt(MAP_TYPE, 0)) {
+        when (sharePref.getInt(MAP_TYPE, 0)) {
             0 -> googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
             1 -> googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
             2 -> googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         }
-        val moscow = LatLng(55.7558, 37.6173)
-        googleMap.addMarker(
-            MarkerOptions().position(moscow)
-                .icon(getBitmapFromDrawable())
-        )
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(moscow))
+        googleMap.setOnMapClickListener {
+            setMarkerOnTheMap(it)
+        }
     }
 
     private fun getBitmapFromDrawable(): BitmapDescriptor {
@@ -100,7 +158,6 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     }
 
     override fun showMapTypeDialog(mapType: Int) {
-
         //Это костыль, но по другому у меня не получилось поменять цвет текста напротив radio buttons.
         //Я пробовал добавить в стиль для диалога: "android:textColorAlertDialogListItem", просто "android:textColor" - всё не работает.
         val options = arrayOf(

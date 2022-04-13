@@ -1,41 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.map_screen.MapScreenFragment">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/map"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/image_change_mod"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/earth"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/text_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/map_type"
-        android:textColor="?attr/colorAccent"
-        app:layout_constraintEnd_toEndOf="@+id/image_change_mod"
-        app:layout_constraintStart_toStartOf="@+id/image_change_mod"
-        app:layout_constraintTop_toBottomOf="@+id/image_change_mod" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_change_mod"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/earth"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/map_type"
+            android:textColor="?attr/colorAccent"
+            app:layout_constraintEnd_toEndOf="@+id/image_change_mod"
+            app:layout_constraintStart_toStartOf="@+id/image_change_mod"
+            app:layout_constraintTop_toBottomOf="@+id/image_change_mod" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_marker_manager"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/custom_marker"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/text_mode"
+            app:layout_constraintStart_toStartOf="@+id/text_mode"
+            app:layout_constraintTop_toBottomOf="@+id/text_mode" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_manager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manager"
+            android:textColor="@color/light_gray"
+            app:layout_constraintEnd_toEndOf="@+id/image_marker_manager"
+            app:layout_constraintStart_toStartOf="@+id/image_marker_manager"
+            app:layout_constraintTop_toBottomOf="@+id/image_marker_manager" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/bottom_sheet" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

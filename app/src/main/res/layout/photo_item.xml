@@ -9,7 +9,7 @@
     android:layout_marginHorizontal="8dp"
     app:carbon_cornerRadius="16dp"
     app:carbon_elevation="6dp"
-    app:carbon_elevationShadowColor="?attr/colorControlActivated">
+    app:carbon_elevationShadowColor="?attr/colorControlHighlight">
 
     <RelativeLayout
         android:layout_width="wrap_content"
