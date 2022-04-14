@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
 import com.example.space.databinding.ItemMarkerBinding
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 
-class MarkersAdapter(private val deleteMarker: (mapMarker: MapMarker) -> Unit) :
+class MarkersAdapter(private val deleteMarker: (position :  Int) -> Unit) :
     ListAdapter<MapMarker, MarkersAdapter.MarkersViewHolder>(TaskDiffCallBack()) {
 
 
@@ -28,16 +30,21 @@ class MarkersAdapter(private val deleteMarker: (mapMarker: MapMarker) -> Unit) :
             textMarkerName.text = marker.name
             textLatValue.text = marker.latLng.latitude.toString()
             textLonValue.text = marker.latLng.longitude.toString()
-            imageDeleteMarker.setOnClickListener { deleteMarker(marker) }
+            imageDeleteMarker.setOnClickListener {
+                deleteMarker(position)
+            }
         }
     }
 
+
+
     class TaskDiffCallBack : DiffUtil.ItemCallback<MapMarker>() {
         override fun areItemsTheSame(oldItem: MapMarker, newItem: MapMarker): Boolean {
-            return oldItem.latLng == newItem.latLng
+            return oldItem.latLng.latitude == newItem.latLng.latitude
         }
 
         override fun areContentsTheSame(oldItem: MapMarker, newItem: MapMarker): Boolean =
             oldItem == newItem
+
     }
 }

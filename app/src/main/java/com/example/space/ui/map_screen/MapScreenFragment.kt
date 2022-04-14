@@ -1,16 +1,18 @@
 package com.example.space.ui.map_screen
 
-import androidx.appcompat.app.AlertDialog
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.HtmlCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
@@ -33,6 +35,7 @@ import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
+
 @AndroidEntryPoint
 class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), OnMapReadyCallback,
     MapScreenView {
@@ -50,8 +53,6 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     lateinit var sharePref: SharedPreferences
 
     private lateinit var adapter: MarkersAdapter
-
-    private val markers = mutableListOf<MapMarker>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,7 +92,37 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
 
     }
 
-    private fun deleteMarker(mapMarker: MapMarker) {
+    private fun deleteMarker(position: Int) {
+        val currentList = adapter.currentList.toMutableList()
+        if (currentList.size == 1) {
+            currentList.removeAt(0)
+            adapter.submitList(currentList)
+            map?.clear()
+            return
+        }
+        if (position == currentList.size) {
+            currentList.removeAt(position - 1)
+            adapter.submitList(currentList)
+            map?.clear()
+            for (item in currentList) {
+                map?.addMarker(
+                    MarkerOptions().position(item.latLng)
+                        .icon(getBitmapFromDrawable())
+                        .title(item.name)
+                )
+            }
+        } else {
+            currentList.removeAt(position)
+            adapter.submitList(currentList)
+            map?.clear()
+            for (item in currentList) {
+                map?.addMarker(
+                    MarkerOptions().position(item.latLng)
+                        .icon(getBitmapFromDrawable())
+                        .title(item.name)
+                )
+            }
+        }
     }
 
     private fun setMarkerOnTheMap(latLng: LatLng) {
@@ -103,16 +134,19 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
             setPositiveButton(getString(R.string.save_positive_button)) { _, _ ->
                 val markerName = editText.text.toString()
                 if (markerName.isEmpty()) {
-                    Snackbar.make(requireView(), getString(R.string.input_error), LENGTH_LONG).show()
+                    Snackbar.make(requireView(), getString(R.string.input_error), LENGTH_LONG)
+                        .show()
                     setMarkerOnTheMap(latLng)
                 } else {
-                    val marker1 = map?.addMarker(
+                    map?.addMarker(
                         MarkerOptions().position(latLng)
                             .icon(getBitmapFromDrawable())
+                            .title(markerName)
                     )
                     val marker = MapMarker(markerName, latLng)
-                    markers.add(marker)
-                    adapter.submitList(markers)
+                    val currentList = adapter.currentList.toMutableList()
+                    currentList.add(marker)
+                    adapter.submitList(currentList)
                 }
             }
             setNegativeButton(getString(R.string.negative_button)) { _, _ -> }
