@@ -8,10 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
 import com.example.space.databinding.ItemMarkerBinding
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 
-class MarkersAdapter(private val deleteMarker: (position :  Int) -> Unit) :
+class MarkersAdapter(private val deleteMarker: (position: Int) -> Unit) :
     ListAdapter<MapMarker, MarkersAdapter.MarkersViewHolder>(TaskDiffCallBack()) {
 
 

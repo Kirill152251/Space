@@ -8,7 +8,6 @@ import com.example.api_response_model.Photo
 import com.example.space.repositories.interfaces.MainScreenRepository
 import com.example.space.ui.main_screen.PhotoPagingSource
 import com.example.space.utils.NETWORK_PAGE_SIZE
-import dagger.hilt.android.scopes.FragmentScoped
 import io.reactivex.rxjava3.core.Flowable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,5 +26,4 @@ class MainScreenRepositoryImpl @Inject constructor(private val pagingSource: Pho
             pagingSourceFactory = { pagingSource }
         ).flowable
     }
-
 }

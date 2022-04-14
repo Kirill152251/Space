@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
@@ -52,7 +50,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     @Inject
     lateinit var sharePref: SharedPreferences
 
-    private lateinit var adapter: MarkersAdapter
+    private var adapter: MarkersAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,22 +67,16 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         binding.imageChangeMod.setOnClickListener {
             presenter.showMapTypeDialog(sharePref.getInt(MAP_TYPE, 0))
         }
-
         val bottomSheetLayout =
             getView()?.findViewById<LinearLayout>(R.id.bottom_sheet_layout) as View
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-
         binding.imageMarkerManager.setOnClickListener {
-            if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            } else {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-            }
+            presenter.showMarkerManagerBottomSheet(bottomSheetBehavior)
         }
 
         val markersRecyclerView = getView()?.findViewById<RecyclerView>(R.id.rv_markers)
-        adapter = MarkersAdapter() {
+        adapter = MarkersAdapter {
             deleteMarker(it)
         }
         markersRecyclerView?.adapter = adapter
@@ -93,32 +85,32 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     }
 
     private fun deleteMarker(position: Int) {
-        val currentList = adapter.currentList.toMutableList()
+        val currentList = adapter?.currentList?.toMutableList() ?: mutableListOf()
         if (currentList.size == 1) {
             currentList.removeAt(0)
-            adapter.submitList(currentList)
+            adapter?.submitList(currentList)
             map?.clear()
             return
         }
         if (position == currentList.size) {
             currentList.removeAt(position - 1)
-            adapter.submitList(currentList)
+            adapter?.submitList(currentList)
             map?.clear()
             for (item in currentList) {
                 map?.addMarker(
                     MarkerOptions().position(item.latLng)
-                        .icon(getBitmapFromDrawable())
+                        .icon(getBitmapMarkerIconFromDrawable())
                         .title(item.name)
                 )
             }
         } else {
             currentList.removeAt(position)
-            adapter.submitList(currentList)
+            adapter?.submitList(currentList)
             map?.clear()
             for (item in currentList) {
                 map?.addMarker(
                     MarkerOptions().position(item.latLng)
-                        .icon(getBitmapFromDrawable())
+                        .icon(getBitmapMarkerIconFromDrawable())
                         .title(item.name)
                 )
             }
@@ -130,6 +122,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         val dialogLayout = layoutInflater.inflate(R.layout.edit_text_layout, null)
         val editText = dialogLayout.findViewById<TextInputEditText>(R.id.edit_text_marker_name)
 
+
         with(dialogBuilder) {
             setPositiveButton(getString(R.string.save_positive_button)) { _, _ ->
                 val markerName = editText.text.toString()
@@ -140,13 +133,13 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                 } else {
                     map?.addMarker(
                         MarkerOptions().position(latLng)
-                            .icon(getBitmapFromDrawable())
+                            .icon(getBitmapMarkerIconFromDrawable())
                             .title(markerName)
                     )
                     val marker = MapMarker(markerName, latLng)
-                    val currentList = adapter.currentList.toMutableList()
-                    currentList.add(marker)
-                    adapter.submitList(currentList)
+                    val currentList = adapter?.currentList?.toMutableList()
+                    currentList?.add(marker)
+                    adapter?.submitList(currentList)
                 }
             }
             setNegativeButton(getString(R.string.negative_button)) { _, _ -> }
@@ -178,7 +171,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         }
     }
 
-    private fun getBitmapFromDrawable(): BitmapDescriptor {
+    private fun getBitmapMarkerIconFromDrawable(): BitmapDescriptor {
         val drawable = AppCompatResources.getDrawable(requireContext(), R.drawable.custom_marker)!!
         drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
         val bitmap = Bitmap.createBitmap(
@@ -230,5 +223,13 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
             .setNegativeButton(getString(R.string.negative_button)) { _, _ -> }
             .create()
         dialog.show()
+    }
+
+    override fun showMarkerManagerBottomSheet(bottomSheetBehavior: BottomSheetBehavior<View>) {
+        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_HIDDEN) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
     }
 }

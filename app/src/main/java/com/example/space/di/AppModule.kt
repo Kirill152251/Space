@@ -25,5 +25,6 @@ object AppModule {
         return context.getSharedPreferences(
             MAP_TYPE_PREF, Context.MODE_PRIVATE)
     }
+
 }
 
