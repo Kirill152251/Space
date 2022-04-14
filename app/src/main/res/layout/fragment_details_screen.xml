@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_screen_background"
     tools:context=".ui.details_screen.DetailsScreenFragment">
 
     <com.example.space.ui.PhotoCustomView
@@ -22,7 +21,7 @@
         android:layout_height="0dp"
         android:clickable="true"
         android:focusable="true"
-        android:background="@color/gray_transparent"
+        android:background="?attr/colorControlNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

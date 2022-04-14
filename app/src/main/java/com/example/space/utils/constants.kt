@@ -10,3 +10,5 @@ const val PUSH_NOTIFICATION_TO_MAP = "map_screen"
 const val PUSH_NOTIFICATION_NOT_TO_MAP = "default_behavior"
 const val NOTIFICATION_ID = 1
 const val INTENT_ACTION = "restart_service"
+const val MAP_TYPE = "type"
+const val MAP_TYPE_PREF = "typePref"

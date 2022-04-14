@@ -34,6 +34,8 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
+    val test:Int = 1
+
     @Inject
     lateinit var presenterProvider: Provider<MainActivityPresenter>
     private val presenter by moxyPresenter { presenterProvider.get() }

@@ -1,6 +1,5 @@
 package com.example.space.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Matrix
 import android.graphics.PointF
@@ -130,7 +129,6 @@ class PhotoCustomView @JvmOverloads constructor(
         imageMatrix = photoMatrix
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(view: View?, event: MotionEvent?): Boolean {
         event ?: return false
         scaleDetector.onTouchEvent(event)

@@ -3,11 +3,9 @@ package com.example.space.ui.details_screen
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +13,7 @@ import androidx.core.content.FileProvider
 import coil.load
 import com.example.space.R
 import com.example.space.databinding.FragmentDetailsScreenBinding
-import com.example.space.mvi_interfaces.details_screen.DetailsScreenView
+import com.example.space.mvi_interfaces.DetailsScreenView
 import com.example.space.presenters.DetailsScreenPresenter
 import com.example.space.utils.URL_KEY
 import com.example.space.utils.parseImageUrl
@@ -27,14 +25,13 @@ import moxy.ktx.moxyPresenter
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
-import kotlin.concurrent.schedule
 
 
 @AndroidEntryPoint
-class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_screen), DetailsScreenView {
+class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_screen),
+    DetailsScreenView {
 
     private var _binding: FragmentDetailsScreenBinding? = null
     private val binding get() = _binding!!
@@ -69,7 +66,6 @@ class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_s
     private fun sharePhoto() {
         val bitmapDrawable = binding.imageDetailPhoto.drawable as BitmapDrawable
         val bitmap = bitmapDrawable.bitmap
-        //val bitmap = Bitmap.createBitmap(binding.imageDetailPhoto.width, binding.imageDetailPhoto.height, Bitmap.Config.ARGB_8888)
         val imageFolder = File(requireActivity().cacheDir, "image")
         val imageUri: Uri = try {
             imageFolder.mkdirs()

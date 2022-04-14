@@ -1,6 +1,5 @@
 package com.example.space.ui.main_screen
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +28,7 @@ class MainScreenAdapter(private val clickListener: (photoItem: Photo) -> Unit) :
     }
 
     class PhotosViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val binding = PhotoItemBinding.bind(view)
+        private val binding = PhotoItemBinding.bind(view)
         fun bind(photo: Photo) {
             binding.apply {
                 textCameraName.text = photo.camera.fullName

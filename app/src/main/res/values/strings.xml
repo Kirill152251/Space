@@ -15,4 +15,18 @@
     <string name="notification_info">…to send notification</string>
     <string name="notification_info_title">App is running in background…</string>
     <string name="notification_info_title2">App is running in background to send notification when device starts charging. You can disable this feature in Settings.</string>
+    <string name="map_type">Type</string>
+    <string name="map_type_dialog_title">Choose map type:</string>
+    <string name="mode_normal">Normal</string>
+    <string name="mode_satellite">Satellite</string>
+    <string name="mode_hybrid">Hybrid</string>
+    <string name="positive_button">OK</string>
+    <string name="negative_button">Cancel</string>
+    <string name="add_marker_hint">Marker name</string>
+    <string name="save_positive_button">Save</string>
+    <string name="example_marker_name">Moscow</string>
+    <string name="lon">Longitude:</string>
+    <string name="lat">Latitude:</string>
+    <string name="example_latLon">99.1618</string>
+    <string name="input_error">Failed to save marker. You should enter the name</string>
 </resources>

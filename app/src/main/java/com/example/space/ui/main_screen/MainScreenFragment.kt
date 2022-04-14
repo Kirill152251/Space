@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.api_response_model.Photo
 import com.example.space.R
 import com.example.space.databinding.FragmentMainScreenBinding
-import com.example.space.mvi_interfaces.main_screen.MainScreenView
+import com.example.space.mvi_interfaces.MainScreenView
 import com.example.space.presenters.MainScreenPresenter
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Flowable

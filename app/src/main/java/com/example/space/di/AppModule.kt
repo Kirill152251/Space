@@ -1,8 +1,8 @@
 package com.example.space.di
 
 import android.content.Context
-import android.content.Intent
-import com.example.space.notification.NotificationChargingService
+import android.content.SharedPreferences
+import com.example.space.utils.MAP_TYPE_PREF
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +19,11 @@ object AppModule {
     @Provides
     fun provideCompositeDisposable() = CompositeDisposable()
 
+    @Singleton
+    @Provides
+    fun provideSharePref(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(
+            MAP_TYPE_PREF, Context.MODE_PRIVATE)
+    }
 }
 

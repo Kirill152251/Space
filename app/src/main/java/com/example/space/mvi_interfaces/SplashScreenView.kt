@@ -1,4 +1,4 @@
-package com.example.space.mvi_interfaces.splash_screen
+package com.example.space.mvi_interfaces
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
