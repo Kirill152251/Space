@@ -34,8 +34,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
-    val test:Int = 1
-
     @Inject
     lateinit var presenterProvider: Provider<MainActivityPresenter>
     private val presenter by moxyPresenter { presenterProvider.get() }
@@ -71,8 +69,22 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
     }
 
     private fun setupBottomMenu() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        when(currentFragment) {
+            is MainScreenFragment -> {
+                binding.apply {
+                    itemMainScreen.setImageResource(R.drawable.main_bottom_menu_check)
+                    itemMapsScreen.setImageResource(R.drawable.maps_bottom_menu_uncheck)
+                }
+            }
+            is MapScreenFragment -> {
+                binding.apply {
+                    itemMainScreen.setImageResource(R.drawable.main_bottom_menu_uncheck)
+                    itemMapsScreen.setImageResource(R.drawable.maps_bottom_menu_check)
+                }
+            }
+        }
         binding.itemMainScreen.setOnClickListener {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment !is MainScreenFragment) {
                 binding.apply {
                     itemMainScreen.setImageResource(R.drawable.main_bottom_menu_check)
@@ -82,7 +94,6 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
             }
         }
         binding.itemMapsScreen.setOnClickListener {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (currentFragment !is MapScreenFragment) {
                 binding.apply {
                     itemMainScreen.setImageResource(R.drawable.main_bottom_menu_uncheck)
