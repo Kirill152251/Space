@@ -4,10 +4,11 @@ import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface MapScreenView: MvpView {
-    @AddToEndSingle
+    @Skip
     fun showMapTypeDialog(mapType: Int)
 
     @AddToEndSingle

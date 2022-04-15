@@ -65,7 +65,6 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("TAG", "onViewCreate")
         binding.imageChangeMod.setOnClickListener {
             presenter.showMapTypeDialog(sharePref.getInt(MAP_TYPE, 0))
         }
@@ -176,7 +175,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                 )
                 adapter?.submitList(presenter.getMarkers())
             }
-        } else Log.i("TAG", "list empty")
+        }
         when (sharePref.getInt(MAP_TYPE, 0)) {
             0 -> googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
             1 -> googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
