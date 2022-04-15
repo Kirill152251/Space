@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,6 +65,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("TAG", "onViewCreate")
         binding.imageChangeMod.setOnClickListener {
             presenter.showMapTypeDialog(sharePref.getInt(MAP_TYPE, 0))
         }
@@ -81,7 +83,6 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         }
         markersRecyclerView?.adapter = adapter
         markersRecyclerView?.layoutManager = LinearLayoutManager(requireContext())
-
     }
 
     private fun deleteMarker(position: Int) {
@@ -90,6 +91,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
             currentList.removeAt(0)
             adapter?.submitList(currentList)
             map?.clear()
+            presenter.deleteMarker(0)
             return
         }
         if (position == currentList.size) {
@@ -103,6 +105,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                         .title(item.name)
                 )
             }
+            presenter.deleteMarker(position - 1)
         } else {
             currentList.removeAt(position)
             adapter?.submitList(currentList)
@@ -114,6 +117,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                         .title(item.name)
                 )
             }
+            presenter.deleteMarker(position)
         }
     }
 
@@ -137,6 +141,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                             .title(markerName)
                     )
                     val marker = MapMarker(markerName, latLng)
+                    presenter.saveMarker(marker)
                     val currentList = adapter?.currentList?.toMutableList()
                     currentList?.add(marker)
                     adapter?.submitList(currentList)
@@ -150,6 +155,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
 
     override fun onDestroy() {
         super.onDestroy()
+        presenter.clearRepository()
         _binding = null
     }
 
@@ -161,6 +167,16 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                 R.raw.style_map
             )
         )
+        if (presenter.getMarkers().isNotEmpty()) {
+            for (item in presenter.getMarkers()) {
+                map?.addMarker(
+                    MarkerOptions().position(item.latLng)
+                        .icon(getBitmapMarkerIconFromDrawable())
+                        .title(item.name)
+                )
+                adapter?.submitList(presenter.getMarkers())
+            }
+        } else Log.i("TAG", "list empty")
         when (sharePref.getInt(MAP_TYPE, 0)) {
             0 -> googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
             1 -> googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE

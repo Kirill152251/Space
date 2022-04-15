@@ -43,6 +43,5 @@ class MarkersAdapter(private val deleteMarker: (position: Int) -> Unit) :
 
         override fun areContentsTheSame(oldItem: MapMarker, newItem: MapMarker): Boolean =
             oldItem == newItem
-
     }
 }
