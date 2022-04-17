@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -200,8 +199,6 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     }
 
     override fun showMapTypeDialog(mapType: Int) {
-        //Это костыль, но по другому у меня не получилось поменять цвет текста напротив radio buttons.
-        //Я пробовал добавить в стиль для диалога: "android:textColorAlertDialogListItem", просто "android:textColor" - всё не работает.
         val options = arrayOf(
             HtmlCompat.fromHtml(
                 "<font color='#C4C4C4'>${getString(R.string.mode_normal)}</font>",

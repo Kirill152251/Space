@@ -6,7 +6,6 @@ import com.example.NasaApiService
 import com.example.api_response_model.NasaApiResponse
 import com.example.api_response_model.Photo
 import com.example.space.utils.STARTING_PAGE_INDEX
-import dagger.hilt.android.scopes.FragmentScoped
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject

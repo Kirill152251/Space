@@ -15,6 +15,8 @@ import com.example.space.R
 import com.example.space.databinding.FragmentDetailsScreenBinding
 import com.example.space.mvi_interfaces.DetailsScreenView
 import com.example.space.presenters.DetailsScreenPresenter
+import com.example.space.utils.FIRST_LAUNCH_KEY
+import com.example.space.utils.PREF
 import com.example.space.utils.URL_KEY
 import com.example.space.utils.parseImageUrl
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
@@ -30,7 +32,7 @@ import javax.inject.Provider
 
 
 @AndroidEntryPoint
-class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_screen),
+class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_screen),
     DetailsScreenView {
 
     private var _binding: FragmentDetailsScreenBinding? = null
@@ -91,8 +93,8 @@ class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_s
     }
 
     override fun showOnboardingScreen() {
-        val settings = requireContext().getSharedPreferences("pref", Context.MODE_PRIVATE)
-        if (settings.getBoolean("first_launch", true)) {
+        val settings = requireContext().getSharedPreferences(PREF, Context.MODE_PRIVATE)
+        if (settings.getBoolean(FIRST_LAUNCH_KEY, true)) {
             binding.apply {
                 imageBackToMain.isClickable = false
                 imageShare.isClickable = false
@@ -115,7 +117,7 @@ class DetailsScreenFragment() : MvpAppCompatFragment(R.layout.fragment_details_s
                     onboardingScreen.visibility = View.GONE
                 }
             }
-            settings.edit().putBoolean("first_launch", false).apply()
+            settings.edit().putBoolean(FIRST_LAUNCH_KEY, false).apply()
         }
     }
 

@@ -9,7 +9,6 @@ import moxy.MvpPresenter
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class MapScreenPresenter @Inject constructor(private val repository: MapScreenRepository) :
     MvpPresenter<MapScreenView>() {
 

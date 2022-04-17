@@ -10,7 +10,7 @@ import com.github.terrakok.cicerone.Router
 import io.reactivex.rxjava3.core.Flowable
 import moxy.MvpPresenter
 import javax.inject.Inject
-
+import javax.inject.Singleton
 
 class MainScreenPresenter @Inject constructor(
     private val repository: MainScreenRepository,

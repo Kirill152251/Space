@@ -12,3 +12,5 @@ const val NOTIFICATION_ID = 1
 const val INTENT_ACTION = "restart_service"
 const val MAP_TYPE = "type"
 const val MAP_TYPE_PREF = "typePref"
+const val FIRST_LAUNCH_KEY = "first_launch"
+const val PREF = "pref"
