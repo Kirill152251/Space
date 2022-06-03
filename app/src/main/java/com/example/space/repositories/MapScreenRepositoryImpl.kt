@@ -22,8 +22,4 @@ class MapScreenRepositoryImpl @Inject constructor() : MapScreenRepository {
     override fun deleteMarker(position: Int) {
         markersList.removeAt(position)
     }
-
-    override fun clearRepository() {
-        markersList.clear()
-    }
 }

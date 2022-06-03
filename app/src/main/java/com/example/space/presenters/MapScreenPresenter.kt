@@ -1,13 +1,12 @@
 package com.example.space.presenters
 
 import android.view.View
-import com.example.space.mvi_interfaces.MapScreenView
+import com.example.space.mvp_interfaces.MapScreenView
 import com.example.space.repositories.interfaces.MapScreenRepository
 import com.example.space.ui.map_screen.MapMarker
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import moxy.MvpPresenter
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class MapScreenPresenter @Inject constructor(private val repository: MapScreenRepository) :
     MvpPresenter<MapScreenView>() {
@@ -26,9 +25,11 @@ class MapScreenPresenter @Inject constructor(private val repository: MapScreenRe
         repository.saveMarker(marker)
     }
 
-    fun deleteMarker(position: Int) {
+    fun deleteMarkerFromCache(position: Int) {
         repository.deleteMarker(position)
     }
 
-    fun clearRepository() = repository.clearRepository()
+    fun submitMarkerList(newList: List<MapMarker>) {
+        viewState.submitMarkerList(newList)
+    }
 }

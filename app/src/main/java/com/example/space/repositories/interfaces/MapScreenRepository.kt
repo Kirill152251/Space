@@ -6,5 +6,4 @@ interface MapScreenRepository {
     fun getMarkers(): List<MapMarker>
     fun saveMarker(marker: MapMarker)
     fun deleteMarker(position: Int)
-    fun clearRepository()
 }

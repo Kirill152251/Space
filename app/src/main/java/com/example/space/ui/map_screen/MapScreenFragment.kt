@@ -3,19 +3,22 @@ package com.example.space.ui.map_screen
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
 import com.example.space.databinding.FragmentMapScreenBinding
-import com.example.space.mvi_interfaces.MapScreenView
+import com.example.space.mvp_interfaces.MapScreenView
 import com.example.space.presenters.MapScreenPresenter
 import com.example.space.utils.MAP_TYPE
 import com.google.android.gms.maps.GoogleMap
@@ -87,14 +90,14 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         val currentList = adapter?.currentList?.toMutableList() ?: mutableListOf()
         if (currentList.size == 1) {
             currentList.removeAt(0)
-            adapter?.submitList(currentList)
+            presenter.submitMarkerList(currentList)
             map?.clear()
-            presenter.deleteMarker(0)
+            presenter.deleteMarkerFromCache(0)
             return
         }
         if (position == currentList.size) {
             currentList.removeAt(position - 1)
-            adapter?.submitList(currentList)
+            presenter.submitMarkerList(currentList)
             map?.clear()
             for (item in currentList) {
                 map?.addMarker(
@@ -103,10 +106,10 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                         .title(item.name)
                 )
             }
-            presenter.deleteMarker(position - 1)
+            presenter.deleteMarkerFromCache(position - 1)
         } else {
             currentList.removeAt(position)
-            adapter?.submitList(currentList)
+            presenter.submitMarkerList(currentList)
             map?.clear()
             for (item in currentList) {
                 map?.addMarker(
@@ -115,7 +118,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                         .title(item.name)
                 )
             }
-            presenter.deleteMarker(position)
+            presenter.deleteMarkerFromCache(position)
         }
     }
 
@@ -142,7 +145,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                     presenter.saveMarker(marker)
                     val currentList = adapter?.currentList?.toMutableList()
                     currentList?.add(marker)
-                    adapter?.submitList(currentList)
+                    presenter.submitMarkerList(currentList!!)
                 }
             }
             setNegativeButton(getString(R.string.negative_button)) { _, _ -> }
@@ -153,7 +156,6 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
 
     override fun onDestroy() {
         super.onDestroy()
-        presenter.clearRepository()
         _binding = null
     }
 
@@ -172,7 +174,7 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
                         .icon(getBitmapMarkerIconFromDrawable())
                         .title(item.name)
                 )
-                adapter?.submitList(presenter.getMarkers())
+                presenter.submitMarkerList(presenter.getMarkers())
             }
         }
         when (sharePref.getInt(MAP_TYPE, 0)) {
@@ -199,23 +201,35 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
     }
 
     override fun showMapTypeDialog(mapType: Int) {
-        val options = arrayOf(
-            HtmlCompat.fromHtml(
-                "<font color='#C4C4C4'>${getString(R.string.mode_normal)}</font>",
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            ),
-            HtmlCompat.fromHtml(
-                "<font color='#C4C4C4'>${getString(R.string.mode_satellite)}</font>",
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            ),
-            HtmlCompat.fromHtml(
-                "<font color='#C4C4C4'>${getString(R.string.mode_hybrid)}</font>",
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
+        val textNormalMode = SpannableString(getString(R.string.mode_normal))
+        textNormalMode.setSpan(
+            ForegroundColorSpan(Color.LTGRAY),
+            0,
+            getString(R.string.mode_normal).length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+        val textSatelliteMode = SpannableString(getString(R.string.mode_satellite))
+        textSatelliteMode.setSpan(
+            ForegroundColorSpan(Color.LTGRAY),
+            0,
+            getString(R.string.mode_satellite).length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+        val textHybridMode = SpannableString(getString(R.string.mode_hybrid))
+        textHybridMode.setSpan(
+            ForegroundColorSpan(Color.LTGRAY    ),
+            0,
+            getString(R.string.mode_hybrid).length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+        val optionsV2 = arrayOf(
+            textNormalMode,
+            textSatelliteMode,
+            textHybridMode
         )
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setTitle(getString(R.string.map_type_dialog_title))
-            .setSingleChoiceItems(options, mapType, null)
+            .setSingleChoiceItems(optionsV2, mapType, null)
             .setPositiveButton(getString(R.string.positive_button)) { dialog, _ ->
                 when ((dialog as AlertDialog).listView.checkedItemPosition) {
                     0 -> {
@@ -243,5 +257,9 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
         } else {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
+    }
+
+    override fun submitMarkerList(newList: List<MapMarker>) {
+        adapter?.submitList(newList)
     }
 }

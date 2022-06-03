@@ -1,6 +1,6 @@
 package com.example.space.presenters
 
-import com.example.space.mvi_interfaces.DetailsScreenView
+import com.example.space.mvp_interfaces.DetailsScreenView
 import moxy.MvpPresenter
 import javax.inject.Inject
 

@@ -6,14 +6,19 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import coil.load
 import com.example.space.R
 import com.example.space.databinding.FragmentDetailsScreenBinding
-import com.example.space.mvi_interfaces.DetailsScreenView
+import com.example.space.mvp_interfaces.DetailsScreenView
 import com.example.space.presenters.DetailsScreenPresenter
 import com.example.space.utils.FIRST_LAUNCH_KEY
 import com.example.space.utils.PREF
@@ -22,6 +27,9 @@ import com.example.space.utils.parseImageUrl
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import java.io.File
@@ -34,6 +42,12 @@ import javax.inject.Provider
 @AndroidEntryPoint
 class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_screen),
     DetailsScreenView {
+
+    companion object {
+        fun newInstance(url: String) = DetailsScreenFragment().apply {
+            arguments  = bundleOf(URL_KEY to url)
+        }
+    }
 
     private var _binding: FragmentDetailsScreenBinding? = null
     private val binding get() = _binding!!
@@ -54,12 +68,14 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
         super.onViewCreated(view, savedInstanceState)
         val args = this.arguments
         val url = args?.getString(URL_KEY)?.parseImageUrl()
-        binding.imageBackToMain.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
         binding.apply {
+            imageBackToMain.setOnClickListener {
+                requireActivity().onBackPressed()
+            }
             imageBackToMain.setOnClickListener { requireActivity().onBackPressed() }
-            imageShare.setOnClickListener { sharePhoto() }
+            imageShare.setOnClickListener {
+                sharePhoto()
+            }
         }
         presenter.showUi(url!!)
         presenter.showOnboardingScreen()
@@ -73,7 +89,11 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
             imageFolder.mkdirs()
             val file = File(imageFolder, "shared_image.png")
             val stream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)
+            lifecycleScope.launch(Dispatchers.Default) {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)
+                }
+            }
             stream.flush()
             stream.close()
             FileProvider.getUriForFile(requireContext(), "com.example.space.fileprovider", file)
@@ -100,8 +120,9 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
                 imageShare.isClickable = false
                 onboardingScreen.visibility = View.VISIBLE
             }
-            val hideOnboardingScreen = Runnable {
-                if (_binding != null) {
+            lifecycleScope.launch{
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    delay(5000)
                     binding.apply {
                         imageBackToMain.isClickable = true
                         imageShare.isClickable = true
@@ -109,7 +130,6 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
                     }
                 }
             }
-            binding.onboardingScreen.postDelayed(hideOnboardingScreen, 5000)
             binding.imageOnboardingBackground.setOnClickListener {
                 binding.apply {
                     imageBackToMain.isClickable = true

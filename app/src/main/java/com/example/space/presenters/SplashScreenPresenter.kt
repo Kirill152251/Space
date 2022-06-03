@@ -1,7 +1,7 @@
 package com.example.space.presenters
 
 import com.example.space.Screens.Main
-import com.example.space.mvi_interfaces.SplashScreenView
+import com.example.space.mvp_interfaces.SplashScreenView
 import com.github.terrakok.cicerone.Router
 import moxy.MvpPresenter
 import javax.inject.Inject

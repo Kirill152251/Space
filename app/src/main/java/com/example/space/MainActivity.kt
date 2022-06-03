@@ -7,7 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.example.space.databinding.ActivityMainBinding
-import com.example.space.mvi_interfaces.MainActivityView
+import com.example.space.mvp_interfaces.MainActivityView
 import com.example.space.notification.RestartServiceBroadcastReceiver
 import com.example.space.notification.NotificationChargingService
 import com.example.space.presenters.MainActivityPresenter

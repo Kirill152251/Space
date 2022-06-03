@@ -1,4 +1,4 @@
-package com.example.space.mvi_interfaces
+package com.example.space.mvp_interfaces
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle

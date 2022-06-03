@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.space.R
 import com.example.space.databinding.FragmentSplashScreenBinding
-import com.example.space.mvi_interfaces.SplashScreenView
+import com.example.space.mvp_interfaces.SplashScreenView
 import com.example.space.presenters.SplashScreenPresenter
 import com.example.space.utils.isOnline
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG

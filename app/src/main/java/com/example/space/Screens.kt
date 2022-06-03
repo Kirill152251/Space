@@ -14,11 +14,7 @@ object Screens {
     fun Splash() = FragmentScreen { SplashScreenFragment() }
     fun Main() = FragmentScreen { MainScreenFragment() }
     fun DetailsScreen(photoUrl: String) = FragmentScreen {
-        val bundle = Bundle()
-        bundle.putString(URL_KEY, photoUrl)
-        val fragment = DetailsScreenFragment()
-        fragment.arguments = bundle
-        fragment
+        DetailsScreenFragment.newInstance(photoUrl)
     }
     fun MapScreen() = FragmentScreen { MapScreenFragment() }
 }

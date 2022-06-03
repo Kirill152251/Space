@@ -1,4 +1,4 @@
-package com.example.space.mvi_interfaces
+package com.example.space.mvp_interfaces
 
 import androidx.paging.PagingData
 import com.example.api_response_model.Photo
@@ -9,5 +9,5 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 
 interface MainScreenView: MvpView {
     @AddToEndSingle
-    fun showRecycleView(photos: Flowable<PagingData<Photo>>, adapter: MainScreenAdapter)
+    fun showRecycleView(photos: PagingData<Photo>, adapter: MainScreenAdapter)
 }
