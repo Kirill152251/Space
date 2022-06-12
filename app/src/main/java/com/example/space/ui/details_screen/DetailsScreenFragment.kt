@@ -2,11 +2,9 @@ package com.example.space.ui.details_screen
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,8 +22,8 @@ import com.example.space.utils.FIRST_LAUNCH_KEY
 import com.example.space.utils.PREF
 import com.example.space.utils.URL_KEY
 import com.example.space.utils.parseImageUrl
+import com.google.android.material.snackbar.*
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -33,8 +31,6 @@ import kotlinx.coroutines.launch
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -45,7 +41,7 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
 
     companion object {
         fun newInstance(url: String) = DetailsScreenFragment().apply {
-            arguments  = bundleOf(URL_KEY to url)
+            arguments = bundleOf(URL_KEY to url)
         }
     }
 
@@ -85,27 +81,26 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
         val bitmapDrawable = binding.imageDetailPhoto.drawable as BitmapDrawable
         val bitmap = bitmapDrawable.bitmap
         val imageFolder = File(requireActivity().cacheDir, "image")
-        val imageUri: Uri = try {
-            imageFolder.mkdirs()
-            val file = File(imageFolder, "shared_image.png")
-            val stream = FileOutputStream(file)
-            lifecycleScope.launch(Dispatchers.Default) {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)
-                }
+        val file = File(imageFolder, "shared_image.png")
+        lifecycleScope.launch(Dispatchers.Default) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                presenter.compressBitmap(imageFolder, bitmap, file, this)
             }
-            stream.flush()
-            stream.close()
-            FileProvider.getUriForFile(requireContext(), "com.example.space.fileprovider", file)
-        } catch (e: Exception) {
-            Snackbar.make(requireView(), getString(R.string.share_photo_error), LENGTH_LONG).show()
-            return
         }
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "image/png"
-        intent.putExtra(Intent.EXTRA_STREAM, imageUri)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        startActivity(Intent.createChooser(intent, getString(R.string.share)))
+        lifecycleScope.launch(Dispatchers.IO) {
+            val imageUri: Uri = try {
+                FileProvider.getUriForFile(requireContext(), "com.example.space.fileprovider", file)
+            } catch (e: Exception) {
+                Snackbar.make(requireView(), getString(R.string.share_photo_error), LENGTH_LONG)
+                    .show()
+                return@launch
+            }
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "image/png"
+            intent.putExtra(Intent.EXTRA_STREAM, imageUri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(Intent.createChooser(intent, getString(R.string.share)))
+        }
     }
 
     override fun showPhoto(url: String) {
@@ -120,7 +115,7 @@ class DetailsScreenFragment : MvpAppCompatFragment(R.layout.fragment_details_scr
                 imageShare.isClickable = false
                 onboardingScreen.visibility = View.VISIBLE
             }
-            lifecycleScope.launch{
+            lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     delay(5000)
                     binding.apply {

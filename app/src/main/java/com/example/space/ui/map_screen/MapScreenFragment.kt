@@ -222,14 +222,14 @@ class MapScreenFragment : MvpAppCompatFragment(R.layout.fragment_map_screen), On
             getString(R.string.mode_hybrid).length,
             Spannable.SPAN_INCLUSIVE_EXCLUSIVE
         )
-        val optionsV2 = arrayOf(
+        val options = arrayOf(
             textNormalMode,
             textSatelliteMode,
             textHybridMode
         )
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setTitle(getString(R.string.map_type_dialog_title))
-            .setSingleChoiceItems(optionsV2, mapType, null)
+            .setSingleChoiceItems(options, mapType, null)
             .setPositiveButton(getString(R.string.positive_button)) { dialog, _ ->
                 when ((dialog as AlertDialog).listView.checkedItemPosition) {
                     0 -> {

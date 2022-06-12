@@ -41,15 +41,6 @@
         <service android:name=".notification.NotificationChargingService"
             android:enabled="true"/>
 
-        <receiver
-            android:name=".notification.RestartServiceBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="restart_service"/>
-            </intent-filter>
-        </receiver>
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_icon" />

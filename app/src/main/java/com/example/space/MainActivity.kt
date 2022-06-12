@@ -1,5 +1,6 @@
 package com.example.space
 
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -8,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import com.example.space.databinding.ActivityMainBinding
 import com.example.space.mvp_interfaces.MainActivityView
-import com.example.space.notification.RestartServiceBroadcastReceiver
 import com.example.space.notification.NotificationChargingService
 import com.example.space.presenters.MainActivityPresenter
 import com.example.space.ui.main_screen.MainScreenFragment
@@ -45,22 +45,19 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         createNotificationChannel()
         setupBottomMenu()
 
-        val service = NotificationChargingService()
-        val serviceIntent = Intent(this, service::class.java)
-
-        if (!service.isServiceRunning) {
+        if (!isServiceRunning(NotificationChargingService::class.java)) {
+            val serviceIntent = Intent(this, NotificationChargingService::class.java)
             startService(serviceIntent)
         }
         if (intent.hasExtra(PUSH_NOTIFICATION_ACTION_KEY) && intent.getStringExtra(
-                PUSH_NOTIFICATION_ACTION_KEY
-            ) == PUSH_NOTIFICATION_TO_MAP
+                PUSH_NOTIFICATION_ACTION_KEY) == PUSH_NOTIFICATION_TO_MAP
         ) {
-            presenter.navigateToMapScreen()
             binding.apply {
                 itemMainScreen.setImageResource(R.drawable.main_bottom_menu_uncheck)
                 itemMapsScreen.setImageResource(R.drawable.maps_bottom_menu_check)
             }
             intent.putExtra(PUSH_NOTIFICATION_ACTION_KEY, PUSH_NOTIFICATION_NOT_TO_MAP)
+            presenter.navigateToMapScreen()
         } else {
             if (savedInstanceState == null) {
                 presenter.openSplashScreen()
@@ -70,7 +67,7 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
 
     private fun setupBottomMenu() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        when(currentFragment) {
+        when (currentFragment) {
             is MainScreenFragment -> {
                 binding.apply {
                     itemMainScreen.setImageResource(R.drawable.main_bottom_menu_check)
@@ -133,14 +130,13 @@ class MainActivity : MvpAppCompatActivity(R.layout.activity_main), MainActivityV
         super.onPause()
     }
 
-    override fun onDestroy() {
-        val serviceIntent = Intent(this, NotificationChargingService::class.java)
-        stopService(serviceIntent)
-        val broadcastIntent = Intent().apply {
-            action = INTENT_ACTION
-            setClass(this@MainActivity, RestartServiceBroadcastReceiver::class.java)
+    private fun isServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
         }
-        sendBroadcast(broadcastIntent)
-        super.onDestroy()
+        return false
     }
 }
